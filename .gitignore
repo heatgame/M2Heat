@@ -1,0 +1,6 @@
+logs/
+
+*.dll
+*.pyc
+*.json
+*.bin
