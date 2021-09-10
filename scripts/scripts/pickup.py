@@ -9,6 +9,7 @@ import b0t
 from utility import finder
 from utility import pos
 import utility
+from hack_manager import hack_manager
 
 class load():
 	def __init__(self):
@@ -79,7 +80,7 @@ class load():
 
 	def loop(self):
 		main_instance = b0t.main_instance()
-		if main_instance and helper.config.picking:
+		if main_instance and hack_manager.picking:
 			if main_instance.dead() is True:
 				return
 			

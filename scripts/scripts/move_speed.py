@@ -5,6 +5,7 @@ import config
 import helper
 import playerm2g2 as player
 import b0t
+from hack_manager import hack_manager
 
 class load():
     def __init__(self):

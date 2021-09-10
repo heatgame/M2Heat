@@ -8,15 +8,8 @@ import b0t
 
 class load():
 	def __init__(self):
-		self.interval = 100
-		self.time_out = 0
+		self.interval = 250
 		job_manager.job_manager.add_job(self)
-
-		# if helper.status.is_ingame:
-		# 	for i in range(90):
-		# 		item_vnum = b0t.player.get_item_index(i)
-		# 		if item_vnum:
-		# 			logger.trace("slot " + str(i) + " vnum " + str(item_vnum))
 
 	def __del2__(self):
 		job_manager.job_manager.del_job(self)
@@ -36,33 +29,29 @@ class load():
 		return -1
 
 	def loop(self):
-		if self.time_out > 0:
-			self.time_out += 1
-			if self.time_out == 25:
-				self.time_out = 0
-		
+		if helper.config.auto_potion == False:
+			return
+
 		main_instance = b0t.main_instance()
-		if main_instance and self.time_out == 0:
+		if main_instance:
 			if main_instance.dead() is True:
 				return
 			
-			hp = player.GetStatus(5)
-			sp = player.GetStatus(7)
+			hp = player.GetStatus(player.HP)
+			sp = player.GetStatus(player.SP)
 
-			max_hp = player.GetStatus(6)
-			max_sp = player.GetStatus(8)
+			max_hp = player.GetStatus(player.MAX_HP)
+			max_sp = player.GetStatus(player.MAX_SP)
 
-			if hp < max_hp / 100 * 80:
+			if hp < max_hp / 100 * helper.config.auto_potion_percent:
 				slot = self.find_potions()
 				if slot != -1:
 					b0t.network.item_use(slot)
-					self.time_out = 1
 
-			if sp < max_sp / 100 * 80:
+			if sp < max_sp / 100 * helper.config.auto_potion_percent:
 				slot = self.find_potions(False)
 				if slot != -1:
 					b0t.network.item_use(slot)
-					self.time_out = 1
 
 
 script = load()

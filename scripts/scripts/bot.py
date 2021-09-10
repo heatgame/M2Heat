@@ -8,7 +8,7 @@ import b0t
 from utility import finder
 from utility import pos
 import utility
-
+from hack_manager import hack_manager
 import teleport_manager
 from teleport_manager import teleport
 
@@ -24,12 +24,6 @@ class load():
 	def __del2__(self):
 		job_manager.job_manager.del_job(self)
 
-	def block_control(self, main_position, target_position):
-		for point in finder.find(main_position, target_position, 100):
-			if b0t.background.blocked(point.x, point.y):
-				return False
-		return True
-
 	def get_closest_way(self, main_instance, route):
 		closest_index = 0
 		closest_distance = None
@@ -38,7 +32,7 @@ class load():
 		for index, r in enumerate(route):
 			distance = b0t.distance(main_position, r)
 			if closest_distance == None or distance < closest_distance:
-				if self.block_control(main_position, r) == False:
+				if utility.block_control(main_position, r) == False:
 					continue
 				closest_index = index
 				closest_distance = distance
@@ -57,7 +51,7 @@ class load():
 			if mob_data.dead():
 				continue
 
-			if self.block_control(main_data.position(), mob_data.position()) == False:
+			if utility.block_control(main_data.position(), mob_data.position()) == False:
 				continue
 			
 			distance = b0t.distance(main_data.position(), mob_data.position())
@@ -120,7 +114,7 @@ class load():
 			if b0t.distance(main_position, target_position) < 400:
 				return True
 
-			if self.block_control(main_position, target_position):
+			if utility.block_control(main_position, target_position):
 				if helper.config.attack_hack or helper.config.skill_hack or helper.config.walk:
 					main_instance.move(target_position)
 				else:
@@ -132,9 +126,8 @@ class load():
 
 	def loop(self):
 		main_instance = b0t.main_instance()
-		if main_instance and helper.config.botting:
+		if main_instance and hack_manager.botting:
 			if helper.config.attack_hack or helper.config.skill_hack or helper.config.walk:
-
 				if main_instance.dead():
 					return
 

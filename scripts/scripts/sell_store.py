@@ -15,6 +15,7 @@ import teleport_manager
 teleport_manager = reload(teleport_manager)
 from teleport_manager import teleport
 from utility import hook
+from hack_manager import hack_manager
 
 SHOP_OPEN = False
 STORAGE_OPEN = False
@@ -34,10 +35,6 @@ def SendPassword(password):
 def StartShop(self, vid):
 	global SHOP_OPEN
 	SHOP_OPEN = True
-
-def EndShop(self):
-	global SHOP_OPEN
-	SHOP_OPEN = False
 
 def AskSafeboxPassword(self):
 	if helper.config.pickup_enable_auto_store == False:
@@ -75,7 +72,6 @@ class load():
 		job_manager.job_manager.del_job(self)
 		hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 		hook.unhook((game.GameWindow, 'StartShop'))
-		hook.unhook((game.GameWindow, 'EndShop'))
 		hook.unhook((game.GameWindow, 'AskSafeboxPassword'))
 		hook.unhook((game.GameWindow, 'OpenSafeboxWindow'))
 		hook.unhook((game.GameWindow, 'CommandCloseSafebox'))
@@ -192,7 +188,6 @@ class load():
 				main_position = main_instance.position()
 
 				hook.hook((game.GameWindow, 'StartShop'), StartShop)
-				hook.hook((game.GameWindow, 'EndShop'), EndShop)
 				hook.hook((game.GameWindow, 'AskSafeboxPassword'), AskSafeboxPassword, True, True)
 				hook.hook((game.GameWindow, 'OpenSafeboxWindow'), OpenSafeboxWindow)
 				hook.hook((game.GameWindow, 'CommandCloseSafebox'), CommandCloseSafebox)
@@ -201,8 +196,7 @@ class load():
 					# logger.trace('sell.py STATE_CHECK')
 					if self.is_inventory_full():
 						# logger.trace('inventory full')
-						helper.config.picking = False
-						helper.config.botting = False
+						hack_manager.stop()
 						if helper.config.pickup_enable_auto_sell:
 							self.state = self.STATE_MOVE
 						else:
@@ -262,6 +256,8 @@ class load():
 								self.retrieve_storable_list()
 								self.state = self.STATE_STACK
 					else:
+						global SHOP_OPEN
+						SHOP_OPEN = False
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_STACK:
 					if len(self.stackable_slots):
@@ -297,8 +293,7 @@ class load():
 				elif self.state == self.STATE_RETURN:
 					#logger.trace('sell.py STATE_RETURN')
 					if teleport.return_to_starting_position(self.job, main_instance):
-						helper.config.picking = True
-						helper.config.botting = True
+						hack_manager.resume()
 						self.state = self.STATE_CHECK
 
 			if not helper.config.pickup_enable_auto_sell and not helper.config.pickup_enable_auto_store:

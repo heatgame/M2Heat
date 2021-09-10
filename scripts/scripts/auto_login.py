@@ -28,9 +28,9 @@ class load():
         else:
             self.pk_enabled = False
 
-        if self.logged_in_once:
+        if self.logged_in_once and helper.config.auto_login:
             phase = b0t.network.phase()
-            if phase == 'OffLine' and helper.config.auto_login:
+            if phase == 'OffLine':
                 net.DirectEnter(0, 0)
                 self.job.wait_for(2000)
             elif phase != 'Game' and self.last_online_tick + 15000 <= timer.get_epoch_ms():

@@ -117,7 +117,7 @@ class teleport_t():
 			b0t.network.state(p, 0, 0, 0)
 
 		if direct_enter == False:
-			_chr.SetPixelPosition(path[-1].x, path[-1].y, path[-1].z)
+			_chr.SetPixelPosition(path[-1].x, path[-1].y)
 
 		self.send_direct_enter = True
 		job.wait_for(2000)

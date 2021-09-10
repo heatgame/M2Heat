@@ -9,6 +9,7 @@ from utility import finder
 from utility import pos
 import utility
 from defence import script as defence
+from hack_manager import hack_manager
 
 class load():
 	def __init__(self):
@@ -34,7 +35,7 @@ class load():
 
 	def loop(self):
 		main_instance = b0t.main_instance()
-		if main_instance and helper.config.botting and (helper.config.attack_hack or helper.config.skill_hack):
+		if main_instance and hack_manager.botting and (helper.config.attack_hack or helper.config.skill_hack):
 			if main_instance.dead() is True:
 				return
 

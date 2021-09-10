@@ -7,6 +7,7 @@ import playerm2g2 as player
 import b0t
 from utility import finder
 from utility import pos
+from hack_manager import hack_manager
 
 class load():
 	def __init__(self):
@@ -41,7 +42,7 @@ class load():
 		
 	def loop(self):
 		main_instance = b0t.main_instance()
-		if main_instance == None or helper.config.botting == False:
+		if main_instance == None or hack_manager.botting == False:
 			return
 
 		self.check_pk_players()

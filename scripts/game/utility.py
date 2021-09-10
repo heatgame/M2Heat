@@ -117,6 +117,12 @@ class find_points2():
 
 		return points
 
+def block_control(main_position, target_position, max_distance = 100):
+	for point in finder.find(main_position, target_position, max_distance):
+		if b0t.background.blocked(point.x, point.y):
+			return False
+	return True
+
 def sort_distance_to_main(mobs, main_instance):
 	main_position = main_instance.position()
 	return sorted(mobs, key = lambda mob:(b0t.distance(main_position, mob.data().position())))
