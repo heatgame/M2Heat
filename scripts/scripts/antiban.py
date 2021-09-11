@@ -9,6 +9,7 @@ import b0t
 import m2netm2g as net, app
 import wintoast
 from hack_manager import hack_manager
+from ch_switcher import ch_switcher
 
 last_private_message_mode = None
 detected_name = ''
@@ -32,6 +33,7 @@ class load():
 		self.job = job_manager.job_manager.add_job(self)
 		self.hacks_stopped = False
 		self.is_turned_on_once = True
+		self.wait_until_another_phase = False
 
 	def __del2__(self):
 		job_manager.job_manager.del_job(self)
@@ -78,33 +80,35 @@ class load():
 			app.Abort()
 		if helper.config.antiban_create_notification:
 			wintoast.create_toast(self.TITLES[state], detected_name)
-			self.job.wait_for(15000)
 		if helper.config.antiban_wait_to_go:
 			hack_manager.stop()
 			self.hacks_stopped = True
+		if helper.config.antiban_change_ch and b0t.network.phase() == 'Game' and self.wait_until_another_phase == False:
+			next_channel = ch_switcher.get_next_channel()
+			ch_switcher.connect_to_channel(next_channel)
+			self.wait_until_another_phase = True
 
 	def loop(self):
 		global last_private_message_mode
-		try:
-			if helper.config.antiban_wait_to_go and self.hacks_stopped and hack_manager.stopped:
-				hack_manager.resume()
-				self.hacks_stopped = False
-			main_instance = b0t.main_instance()
-			if main_instance and helper.config.antiban:
-				if self.is_turned_on_once:
-					hook.hook((game.GameWindow, 'OnRecvWhisper'), OnRecvWhisper)
-					self.is_turned_on_once = False
+		if self.wait_until_another_phase:
+			if b0t.network.phase() != 'Game':
+				self.wait_until_another_phase = False
 
-				result = self.is_any_state_triggered()
-				if result != 0:
-					self.trigger(result)
-			elif self.is_turned_on_once == False:
-				hook.unhook((game.GameWindow, 'OnRecvWhisper'))
-				last_private_message_mode = None
-				self.is_turned_on_once = True
+		if helper.config.antiban_wait_to_go and self.hacks_stopped and hack_manager.stopped:
+			hack_manager.resume()
+			self.hacks_stopped = False
+		main_instance = b0t.main_instance()
+		if main_instance and helper.config.antiban:
+			if self.is_turned_on_once:
+				hook.hook((game.GameWindow, 'OnRecvWhisper'), OnRecvWhisper)
+				self.is_turned_on_once = False
 
-		except Exception as error:
-			import error_manager as err
-			err.push(error)
+			result = self.is_any_state_triggered()
+			if result != 0:
+				self.trigger(result)
+		elif self.is_turned_on_once == False:
+			hook.unhook((game.GameWindow, 'OnRecvWhisper'))
+			last_private_message_mode = None
+			self.is_turned_on_once = True
 
 script = load()

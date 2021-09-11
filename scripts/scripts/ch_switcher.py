@@ -1,26 +1,20 @@
 # -*- coding:utf-8 -*-
-from root import job_manager
 import logger
 import helper
 import playerm2g2 as player, m2netm2g as net, serverInfo
 import utility
 from utility import hook
 import b0t
+from auto_login import auto_login
 
 class load():
-	NOOP = 0
-	SWITCHING = 1
 	def __init__(self):
-		self.interval = 1000
-		self.job = job_manager.job_manager.add_job(self)
 		self.channels = {}
 		self.current_channel = 0
 		self.port_diff = 0
 
-		self.channel_changed = True
-
 	def __del2__(self):
-		job_manager.job_manager.del_job(self)
+		pass
 
 	def get_region_id(self):
 		return 0
@@ -52,31 +46,28 @@ class load():
 				'acc_port' : serverInfo.REGION_AUTH_SERVER_DICT[region_id][server_id]['port']
 			}
 
+	def get_channel_count(self):
+		return len(self.channels)
+
 	def connect_to_channel(self, id):
+		auto_login.job.wait_for(5000)
 		b0t.network.set_direct_enter_mode(0)
 		net.ConnectTCP(self.channels[id]["ip"], self.channels[id]["port"] - self.port_diff)
-		
-	def loop(self):	
-		main_instance = b0t.main_instance()
-		if main_instance == None or self.channel_changed == True:
-			return
-		
-		self.connect_to_channel(2)
 
-		self.channel_changed = True
+	def get_next_channel(self):
+		self.current_channel = net.GetChannelNumber()
+		if self.current_channel >= self.get_channel_count():
+			return 1
+		return self.current_channel + 1
 
 	def on_connect(self, ip, port):
 		if b0t.network.phase() != 'Select':
 			return
-
-		logger.trace('on_connect: port: ' + str(port))
 		
 		self.get_channel_info()
 
 		self.current_channel = net.GetChannelNumber()
 		self.port_diff = self.channels[self.current_channel]["port"] - port
-		logger.trace('port_diff: ' + str(self.port_diff))
-		self.channel_changed = False
 		
 
 script = load()

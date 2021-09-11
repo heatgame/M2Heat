@@ -15,7 +15,7 @@ class job_manager_t():
 			self.jobs.remove(first_or_default)
 		else:
 			import logger
-			logger.trace('job_manager delete error: not found')
+			logger.error('job_manager delete error: not found')
 		
 	def loop(self):
 		try:

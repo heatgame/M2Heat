@@ -40,4 +40,4 @@ class load():
 
 
 script = load()
-
+auto_login = script

@@ -39,14 +39,6 @@ class load():
 			if main_instance.dead() is True:
 				return
 
-			# target_vid = player.GetTargetVID()
-			# if target_vid:
-			# 	mob = self.get_mob_from_vid(target_vid)
-			# 	if mob:
-			# 		for i in range(50):
-			# 			b0t.network.add_fly_targeting(target_vid, mob.position())
-			# 		b0t.network.shoot(35)
-
 			mobs = utility.sort_distance_to_main(b0t.mobs(helper.config.attack_types, helper.config.distance), main_instance)
 
 			# DEFENCE
@@ -100,7 +92,8 @@ class load():
 						for i in range(4):
 							b0t.network.add_fly_targeting(mob_data.vid(), mob_position)
 					b0t.network.shoot(35)
-					b0t.network.attack(0, mob_data.vid())
+					if helper.config.attack_hack:
+						b0t.network.attack(0, mob_data.vid())
 				elif helper.config.attack_hack:
 					b0t.network.attack(0, mob_data.vid())
 

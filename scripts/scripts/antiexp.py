@@ -22,6 +22,8 @@ class load():
         next_exp = player.GetStatus(player.NEXT_EXP)
 
         if exp > (next_exp / 100 * 10):
-            net.SendGuildOfferPacket(exp)
+            guild_id = player.GetGuildID()
+            if guild_id != 0:
+                net.SendGuildOfferPacket(exp)
 
 script = load()
