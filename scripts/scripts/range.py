@@ -100,6 +100,7 @@ class load():
 						for i in range(4):
 							b0t.network.add_fly_targeting(mob_data.vid(), mob_position)
 					b0t.network.shoot(35)
+					b0t.network.attack(0, mob_data.vid())
 				elif helper.config.attack_hack:
 					b0t.network.attack(0, mob_data.vid())
 

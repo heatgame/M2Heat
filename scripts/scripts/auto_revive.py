@@ -8,22 +8,6 @@ import utility
 from hack_manager import hack_manager
 import math
 
-"""
-		if b0t.distance(main_instance.position(), route[self.index]) < 400:
-			if self.back == False and self.index >= len(route) - 1:
-				self.back = True
-			if self.back == False:
-				self.index += 1
-			
-			if self.back == True and self.index <= 0:
-				self.back = False
-				self.index += 1
-			elif self.back == True:
-				self.index -= 1
-
-		main_instance.move(route[self.index])
-"""
-
 class load():
 
 	PI = 3.14159265359
@@ -66,7 +50,7 @@ class load():
 	def wait_for_hp(self, main_instance):
 		hp = player.GetStatus(player.HP)
 		max_hp = player.GetStatus(player.MAX_HP)
-		if hp < max_hp / 100 * 30:
+		if hp < max_hp / 100 * 50:
 			self.turn(main_instance)
 			return False
 		return True

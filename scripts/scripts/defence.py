@@ -50,7 +50,7 @@ class load():
 		if main_instance.dead():
 			return
 
-		for vid in self.vids:
-		 	self.send_auto(vid, b0t.pos(0, 0, 0))
+		# for vid in self.vids:
+		#  	self.send_auto(vid, b0t.pos(0, 0, 0))
 
 script = load()

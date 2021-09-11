@@ -285,12 +285,12 @@ class load():
 						if self.store_item(current_vnum, current_slot):
 							self.job.wait_for(1000)
 					else:
-						hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 						# _game.CommandCloseSafebox()
 						player.SendStorageClose(5)
 						self.job.wait_for(5000)
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_RETURN:
+					hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 					#logger.trace('sell.py STATE_RETURN')
 					if teleport.return_to_starting_position(self.job, main_instance):
 						hack_manager.resume()
