@@ -8,13 +8,16 @@ from utility import hook
 import b0t
 
 class load():
+	NOOP = 0
+	SWITCHING = 1
 	def __init__(self):
-		self.interval = 5000
+		self.interval = 1000
 		self.job = job_manager.job_manager.add_job(self)
 		self.channels = {}
 		self.current_channel = 0
+		self.port_diff = 0
 
-		self.channel_changed = False
+		self.channel_changed = True
 
 	def __del2__(self):
 		job_manager.job_manager.del_job(self)
@@ -25,7 +28,6 @@ class load():
 	def get_server_id(self, region_id):
 		server_name = net.GetServerInfo()
 		server_name = server_name.split(',', 1)[0]
-		logger.trace(server_name)
 		for server in serverInfo.REGION_DICT[region_id].keys():
 			if serverInfo.REGION_DICT[region_id][server]['name'] == server_name:
 				return server
@@ -51,24 +53,30 @@ class load():
 			}
 
 	def connect_to_channel(self, id):
-		ip = self.channels[id]["ip"]
-		port = self.channels[id]["port"]
-		logger.trace(ip + ' ' + str(port))
-		net.ConnectTCP(ip, port)
 		b0t.network.set_direct_enter_mode(0)
+		net.ConnectTCP(self.channels[id]["ip"], self.channels[id]["port"] - self.port_diff)
 		
-	def loop(self):
-		# b0t.network.set_login_phase()
-		# main_instance = b0t.main_instance()
-		# if main_instance == None or self.channel_changed == True:
-		# 	return
+	def loop(self):	
+		main_instance = b0t.main_instance()
+		if main_instance == None or self.channel_changed == True:
+			return
 		
-		self.get_channel_info()
-
-		self.connect_to_channel(6)
+		self.connect_to_channel(2)
 
 		self.channel_changed = True
 
+	def on_connect(self, ip, port):
+		if b0t.network.phase() != 'Select':
+			return
+
+		logger.trace('on_connect: port: ' + str(port))
+		
+		self.get_channel_info()
+
+		self.current_channel = net.GetChannelNumber()
+		self.port_diff = self.channels[self.current_channel]["port"] - port
+		logger.trace('port_diff: ' + str(self.port_diff))
+		self.channel_changed = False
 		
 
 script = load()
