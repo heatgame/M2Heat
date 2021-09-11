@@ -135,7 +135,7 @@ class load():
 					return
 
 				if self.a_stone_dead:
-					self.job.wait_for(8000)
+					self.job.wait_for(3000)
 					self.a_stone_dead = False
 					return
 

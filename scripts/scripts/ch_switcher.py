@@ -12,6 +12,7 @@ class load():
 		self.channels = {}
 		self.current_channel = 0
 		self.port_diff = 0
+		self.port = 0
 
 	def __del2__(self):
 		pass
@@ -52,22 +53,27 @@ class load():
 	def connect_to_channel(self, id):
 		auto_login.job.wait_for(5000)
 		b0t.network.set_direct_enter_mode(0)
-		net.ConnectTCP(self.channels[id]["ip"], self.channels[id]["port"] - self.port_diff)
+		net.ConnectTCP(self.channels[id]['ip'], self.channels[id]['port'] - self.port_diff)
 
 	def get_next_channel(self):
-		self.current_channel = net.GetChannelNumber()
+		self.current_channel = self.get_curr_channel()
 		if self.current_channel >= self.get_channel_count():
 			return 1
+
 		return self.current_channel + 1
 
+	def get_curr_channel(self):
+		return min(range(1, self.get_channel_count() + 1), key = lambda i: abs(self.channels[i]['port'] - self.port))
+
 	def on_connect(self, ip, port):
-		if b0t.network.phase() != 'Select':
+		if b0t.network.phase() == 'OffLine':
 			return
-		
+
 		self.get_channel_info()
 
-		self.current_channel = net.GetChannelNumber()
-		self.port_diff = self.channels[self.current_channel]["port"] - port
+		self.port = port
+		self.current_channel = self.get_curr_channel()
+		self.port_diff = self.channels[self.current_channel]['port'] - port
 		
 
 script = load()
