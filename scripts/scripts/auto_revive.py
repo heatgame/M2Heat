@@ -62,7 +62,7 @@ class load():
 			if main_instance.dead() == False:
 				if hack_manager.stopped:
 					self.interval = 50
-					if self.hacks_stopped and self.wait_for_hp(main_instance) == True:
+					if self.hacks_stopped and (self.wait_for_hp(main_instance) == True or helper.config.botting == False):
 						hack_manager.resume()
 						self.points = None
 						self.hacks_stopped = False

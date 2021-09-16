@@ -235,7 +235,7 @@ class load():
 						logger.trace('slot: ' + str(current_slot) + ' name: ' + current_item.name() + ' price: ' + str(current_item.sell_price()))
 						b0t.network.sell(current_slot, current_count, 1)
 
-						self.job.wait_for(250)
+						self.job.wait_for(50)
 					elif helper.config.pickup_enable_auto_store:
 						if teleport.go_to_closest_vendor_or_store(self.job, main_instance, True):
 							npc = utility.get_npc(utility.STORE_VNUM)
