@@ -83,7 +83,9 @@ class load():
 					temp.append(n_pos)
 
 				temp_position = pos().conv(mob_position)
-				if helper.config.skill_hack:
+
+				race = player.GetRace()
+				if helper.config.skill_hack and (race == 1 or race == 5):
 					mob_type = mob_data.type()
 					if mob_type == 2:
 						for i in range(50):

@@ -180,6 +180,7 @@ class load():
 
 	def loop(self):
 		try:
+			global SHOP_OPEN
 			main_instance = b0t.main_instance()
 			if main_instance and (helper.config.pickup_enable_auto_sell or helper.config.pickup_enable_auto_store) and helper.status.is_ingame:# and helper.config.botting:
 				if main_instance.dead():
@@ -216,7 +217,6 @@ class load():
 						event.SelectAnswer(1, 0)
 
 						self.job.wait_for(1000)
-						global SHOP_OPEN
 						if SHOP_OPEN == True:						
 							#prepare sell list
 							self.retrieve_sellable_list()
@@ -256,7 +256,6 @@ class load():
 								self.retrieve_storable_list()
 								self.state = self.STATE_STACK
 					else:
-						global SHOP_OPEN
 						SHOP_OPEN = False
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_STACK:
