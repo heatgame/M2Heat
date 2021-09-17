@@ -245,7 +245,7 @@ class teleport_t():
 			else:
 				self.curr_npc_position = map_manager.get_npc_position(b0t.current_map(), utility.VENDOR_VNUM)
 
-		if self.go(job, main_instance, 'vendor_or_store', self.curr_npc_position, False, store is False, store is False) == False:
+		if self.go(job, main_instance, 'vendor_or_store', self.curr_npc_position, False, not store, not store) == False:
 			return False
 
 		self.curr_npc_position = None

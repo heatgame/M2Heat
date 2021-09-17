@@ -256,7 +256,6 @@ class load():
 								self.retrieve_storable_list()
 								self.state = self.STATE_STACK
 					else:
-						SHOP_OPEN = False
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_STACK:
 					if len(self.stackable_slots):
@@ -289,6 +288,7 @@ class load():
 						self.job.wait_for(5000)
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_RETURN:
+					SHOP_OPEN = False
 					hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 					#logger.trace('sell.py STATE_RETURN')
 					if teleport.return_to_starting_position(self.job, main_instance):
