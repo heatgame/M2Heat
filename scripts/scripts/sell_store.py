@@ -256,6 +256,7 @@ class load():
 								self.retrieve_storable_list()
 								self.state = self.STATE_STACK
 					else:
+						hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_STACK:
 					if len(self.stackable_slots):
@@ -286,10 +287,10 @@ class load():
 						# _game.CommandCloseSafebox()
 						player.SendStorageClose(5)
 						self.job.wait_for(5000)
+						hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 						self.state = self.STATE_RETURN
 				elif self.state == self.STATE_RETURN:
 					SHOP_OPEN = False
-					hook.unhook((game.GameWindow, 'OpenQuestWindow'))
 					#logger.trace('sell.py STATE_RETURN')
 					if teleport.return_to_starting_position(self.job, main_instance):
 						hack_manager.resume()

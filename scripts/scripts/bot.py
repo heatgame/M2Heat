@@ -68,7 +68,7 @@ class load():
 		if self.index == None:
 			self.index = self.get_closest_way(main_instance, route)
 			# create new route with a-star algorithm to go closest index
-			if b0t.distance(main_instance.position(), route[self.index]) > 2000:
+			if b0t.distance(main_instance.position(), route[self.index]) > 6500:
 				teleport.go(self.job, main_instance, 'go nearest index', route[self.index], False, True, False)
 				return
 		
