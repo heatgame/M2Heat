@@ -50,7 +50,7 @@ class load():
 	def wait_for_hp(self, main_instance):
 		hp = player.GetStatus(player.HP)
 		max_hp = player.GetStatus(player.MAX_HP)
-		if hp < max_hp / 100 * 50:
+		if hp < max_hp / 100 * 30:
 			self.turn(main_instance)
 			return False
 		return True

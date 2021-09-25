@@ -86,13 +86,8 @@ class load():
 
 				race = player.GetRace()
 				if helper.config.skill_hack and (race == 1 or race == 5):
-					mob_type = mob_data.type()
-					if mob_type == 2:
-						for i in range(50):
-							b0t.network.add_fly_targeting(mob_data.vid(), mob_position)
-					else:
-						for i in range(4):
-							b0t.network.add_fly_targeting(mob_data.vid(), mob_position)
+					for i in range(5):
+						b0t.network.add_fly_targeting(mob_data.vid(), mob_position)
 					b0t.network.shoot(35)
 					if helper.config.attack_hack:
 						b0t.network.attack(0, mob_data.vid())
