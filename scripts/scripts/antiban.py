@@ -31,7 +31,7 @@ class load():
 	def __init__(self):
 		self.interval = 50
 		self.job = job_manager.job_manager.add_job(self)
-		self.hacks_stopped = False
+		self.hacks_stopped = hack_manager.stopped
 		self.is_turned_on_once = True
 		self.wait_until_another_phase = False
 
@@ -73,16 +73,17 @@ class load():
 			helper.config.auto_login = False
 			b0t.network.set_login_phase()
 		if helper.config.antiban_stop_hacks:
-			helper.config.botting = False
-			helper.config.picking = False
-			helper.config.move_speed = 0
+			if self.hacks_stopped == False:
+				hack_manager.stop()
+				self.hacks_stopped = True
 		if helper.config.antiban_exit_game:
 			app.Abort()
 		if helper.config.antiban_create_notification:
 			wintoast.create_toast(self.TITLES[state], detected_name)
 		if helper.config.antiban_wait_to_go:
-			hack_manager.stop()
-			self.hacks_stopped = True
+			if self.hacks_stopped == False:
+				hack_manager.stop()
+				self.hacks_stopped = True
 		if helper.config.antiban_change_ch and b0t.network.phase() == 'Game' and self.wait_until_another_phase == False:
 			next_channel = ch_switcher.get_next_channel()
 			ch_switcher.connect_to_channel(next_channel)
@@ -90,13 +91,12 @@ class load():
 
 	def loop(self):
 		global last_private_message_mode
+		result = 0
+
 		if self.wait_until_another_phase:
 			if b0t.network.phase() != 'Game':
 				self.wait_until_another_phase = False
 
-		if helper.config.antiban_wait_to_go and self.hacks_stopped and hack_manager.stopped:
-			hack_manager.resume()
-			self.hacks_stopped = False
 		main_instance = b0t.main_instance()
 		if main_instance and helper.config.antiban:
 			if self.is_turned_on_once:
@@ -110,5 +110,13 @@ class load():
 			hook.unhook((game.GameWindow, 'OnRecvWhisper'))
 			last_private_message_mode = None
 			self.is_turned_on_once = True
+		else:
+			if self.hacks_stopped:
+				hack_manager.resume()
+				self.hacks_stopped = False
+		
+		if self.hacks_stopped and result == 0 and helper.config.antiban_wait_to_go == True:
+			hack_manager.resume()
+			self.hacks_stopped = False
 
 script = load()

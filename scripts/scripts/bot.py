@@ -16,7 +16,7 @@ class load():
 	def __init__(self):
 		self.index = None
 		self.back = False
-		self.path = None
+		self.route_name = None
 		self.interval = 100
 		self.job = job_manager.job_manager.add_job(self)
 		self.a_stone_dead = False
@@ -63,6 +63,7 @@ class load():
 
 	def walk(self, main_instance, route):
 		if len(route) == 0:
+			helper.map.clear_lines()
 			return
 
 		if self.index == None:
@@ -139,6 +140,10 @@ class load():
 					self.a_stone_dead = False
 					return
 
+				if helper.route.name() != self.route_name:
+					self.route_name = helper.route.name()
+					self.index = None
+				
 				route = helper.route.current()
 				self.walk(main_instance, route)
 
