@@ -14,6 +14,7 @@ from hack_manager import hack_manager
 class load():
 	def __init__(self):
 		self.interval = 100
+		self.race = None
 		job_manager.job_manager.add_job(self)
 
 	def __del2__(self):
@@ -32,12 +33,24 @@ class load():
 			return mob
 		
 		return None
+	
+	def reset_interval(self, current_race):
+		if current_race == 1 or current_race == 5:
+			self.interval = 100
+		else:
+			self.interval = 300
+		self.race = current_race
 
 	def loop(self):
 		main_instance = b0t.main_instance()
 		if main_instance and hack_manager.botting and (helper.config.attack_hack or helper.config.skill_hack):
 			if main_instance.dead() is True:
 				return
+			
+			current_race = player.GetRace()
+
+			if self.race != current_race:
+				self.reset_interval(current_race)
 
 			mobs = utility.sort_distance_to_main(b0t.mobs(helper.config.attack_types, helper.config.distance), main_instance)
 

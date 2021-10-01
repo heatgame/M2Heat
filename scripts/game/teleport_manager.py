@@ -108,8 +108,6 @@ class teleport_t():
 				return False
 
 		main_instance_position = main_instance.position()
-		# logger.trace('x: ' + str(main_instance_position.x) + ' y: ' + str(main_instance_position.y))
-		# logger.trace('x: ' + str(target_pos.x) + ' y: ' + str(target_pos.y))
 		path = helper.astar.find_path(main_instance_position, target_pos, 10000, 1)
 		if len(path) == 0:
 			return True
@@ -160,7 +158,6 @@ class teleport_t():
 			if i < len(route) - 1:
 				helper.map.add_line(int(r.x), int(r.y), int(route[i + 1].x), int(route[i + 1].y), 0, 0, 0, 1.0)
 		# move to current index
-		# logger.trace('x: ' + str(route[index].x) + ' y: ' + str(route[index].y) + ' z: ' + str(route[index].z))
 		main_instance.move(route[index])
 		return False
 
