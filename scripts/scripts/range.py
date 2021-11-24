@@ -69,11 +69,12 @@ class load():
 			main_position = pos().conv(main_instance.position())
 			temp_position = main_position
 
+			hit_counter = helper.config.hit_limit
 			temp = list()
 
 			for mob in mobs:		
 
-				if len(temp) >= 20:
+				if len(temp) >= 20 or hit_counter == 0:
 					break
 
 				mob_data = mob.data()
@@ -106,6 +107,9 @@ class load():
 						b0t.network.attack(0, mob_data.vid())
 				elif helper.config.attack_hack:
 					b0t.network.attack(0, mob_data.vid())
+
+				if hit_counter != 100:# unlimited value is 100
+					hit_counter -= 1
 
 			blocked = False
 

@@ -11,6 +11,7 @@ import utility
 from hack_manager import hack_manager
 import teleport_manager
 from teleport_manager import teleport
+from mine import mine
 
 class load():
 	def __init__(self):
@@ -140,6 +141,11 @@ class load():
 					self.a_stone_dead = False
 					return
 
+				nearest_mob = self.find_nearest_mob()
+				if nearest_mob and nearest_mob.type() & 1:# npc/mine
+					if mine.loop(main_instance, nearest_mob):
+						return
+
 				if helper.route.name() != self.route_name:
 					self.route_name = helper.route.name()
 					self.index = None
@@ -150,6 +156,9 @@ class load():
 			else:
 				nearest_mob = self.find_nearest_mob()
 				if nearest_mob:
+					if nearest_mob.type() & 1:# npc/mine
+						if mine.loop(main_instance, nearest_mob):
+							return
 					vid = nearest_mob.vid()
 					b0t.player.on_press_actor(vid, True)
 		else:
